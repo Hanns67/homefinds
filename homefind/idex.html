@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentRooms - Location de Chambres pour Étudiants</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 300;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: #25d366;
+            font-weight: 600;
+        }
+
+        .contact-btn {
+            background-color: #25d366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .contact-btn:hover {
+            background-color: #20ba5a;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 300;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            background-color: #25d366;
+            color: white;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-button:hover {
+            background-color: #20ba5a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 50px;
+            color: #1a1a1a;
+        }
+
+        /* Rooms Grid */
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .room-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        /* IMAGE : remplace l'ancien .room-image avec emoji */
+        .room-image {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+            background-color: #e0e0e0;
+        }
+
+        .room-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .room-card:hover .room-image img {
+            transform: scale(1.05);
+        }
+
+        /* Fallback affiché si l'image ne charge pas */
+        .room-image .img-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 60px;
+        }
+
+        .room-content {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .room-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .room-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            flex: 1;
+        }
+
+        .room-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .feature {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .feature-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .room-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: 600;
+            color: #25d366;
+        }
+
+        .price-period {
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .contact-room-btn {
+            background-color: #25d366;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-room-btn:hover {
+            background-color: #20ba5a;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 30px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #1a1a1a;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        /* IMAGE MODAL */
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            background-color: #e0e0e0;
+            position: relative;
+        }
+
+        .modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .modal-image .img-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 80px;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .detail-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .modal-description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .modal-features {
+            margin-bottom: 25px;
+        }
+
+        .modal-features-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+
+        .features-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .features-list li {
+            background: #f0f7ff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .modal-cta {
+            width: 100%;
+            background-color: #25d366;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .modal-cta:hover {
+            background-color: #20ba5a;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .footer-text {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #25d366;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .header-content { flex-wrap: wrap; }
+            .logo { font-size: 22px; }
+            .section-title { font-size: 28px; }
+            .rooms-grid { grid-template-columns: 1fr; }
+            .room-features { grid-template-columns: 1fr; }
+            .modal-details { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 26px; }
+            .hero p { font-size: 16px; }
+            .container { padding: 40px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                🏠 Student<span>Rooms</span>
+            </div>
+            <a href="https://wa.me/237659932082?text=Bonjour,%20je%20suis%20intéressé%20par%20vos%20chambres" target="_blank" class="contact-btn">
+                📱 Contacter
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Trouvez Votre Chambre Idéale</h1>
+            <p>Des chambres confortables et abordables pour les étudiants. Prêtes à louer, proches de l'université.</p>
+            <button class="cta-button" onclick="scrollToRooms()">
+                📱 Voir les offres
+            </button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2 class="section-title">Nos Chambres Disponibles</h2>
+        <div class="rooms-grid" id="roomsGrid"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="roomModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image" id="modalImage"></div>
+
+                <div class="modal-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Localisation</span>
+                        <div class="detail-value" id="modalLocation"></div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Prix par mois</span>
+                        <div class="detail-value" id="modalPrice"></div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Type de chambre</span>
+                        <div class="detail-value" id="modalType"></div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Surface</span>
+                        <div class="detail-value" id="modalSize"></div>
+                    </div>
+                </div>
+
+                <p class="modal-description" id="modalDescription"></p>
+
+                <div class="modal-features">
+                    <div class="modal-features-title">Équipements</div>
+                    <ul class="features-list" id="modalFeatures"></ul>
+                </div>
+
+                <button class="modal-cta" onclick="contactViaWhatsApp()">
+                    📱 Contacter via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3 class="footer-title">StudentRooms</h3>
+            <p class="footer-text">Votre plateforme de confiance pour trouver une chambre d'étudiant</p>
+            <div class="footer-contact">☎️ +237 659 932 082</div>
+            <p style="margin-top: 20px; font-size: 12px; opacity: 0.6;">© 2024 StudentRooms. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <script>
+        /*
+         * ============================================================
+         *  DONNÉES DES CHAMBRES
+         *  → Remplacez la valeur de "image" par le chemin réel de
+         *    chaque photo (chemin relatif ou URL absolue).
+         *    Exemples :
+         *      "image": "images/chambre1.png
+"
+         *      "image": "https://monserveur.com/photos/melen.png
+"
+         *  → "fallbackEmoji" s'affiche si l'image ne se charge pas.
+         * ============================================================
+         */
+        const rooms = [
+            {
+                id: 1,
+                title: "Chambre Lumineuse Quartier Université",
+                location: "Yaoundé, Quartier Melen",
+                price: "45,000",
+                type: "Chambre Simple",
+                size: "18m²",
+                description: "Belle chambre lumineuse avec fenêtre donnant sur la rue. Idéale pour étudiant travailleur. Proche des transports en commun et des commodités.",
+                image: "images/chambre_melen.png",         // ← à remplacer
+                fallbackEmoji: "🌞",
+                features: ["WiFi Gratuit", "Eau Chaude", "Climatisation", "Éclairage LED", "Armoire"],
+                phone: "+237659932082"
+            },
+            {
+                id: 2,
+                title: "Studio Cosy Centre Ville",
+                location: "Yaoundé, Mokolo",
+                price: "55,000",
+                type: "Studio",
+                size: "22m²",
+                description: "Petit studio super bien équipé. Kitchenette intégrée, salle de bain privée. Parfait pour l'indépendance et le confort.",
+                image: "images/studio_mokolo.png",          // ← à remplacer
+                fallbackEmoji: "✨",
+                features: ["Kitchenette", "Salle de bain privée", "WiFi", "Eau Chaude", "Climatisation"],
+                phone: "+237659932082"
+            },
+            {
+                id: 3,
+                title: "Chambre Confortable Plateau",
+                location: "Yaoundé, Plateau Atemengué",
+                price: "40,000",
+                type: "Chambre Simple",
+                size: "16m²",
+                description: "Chambre simple mais très confortable. Environnement calme et sécurisé. Accès à cuisine commune et laverie.",
+                image: "images/chambre_plateau.png",        // ← à remplacer
+                fallbackEmoji: "🏡",
+                features: ["Cuisine Commune", "Laverie", "WiFi", "Gardien 24/24", "Eau 24/24"],
+                phone: "+237659932082"
+            },
+            {
+                id: 4,
+                title: "Chambre Double avec Balcon",
+                location: "Yaoundé, Bastos",
+                price: "75,000",
+                type: "Chambre Double",
+                size: "25m²",
+                description: "Spacieuse chambre double avec balcon. Permet la colocation entre amis. Calme et sécurisé avec portail fermé.",
+                image: "images/chambre_bastos.png",         // ← à remplacer
+                fallbackEmoji: "🌴",
+                features: ["Balcon", "Double Lit", "WiFi", "Climatisation", "Miroir"],
+                phone: "+237659932082"
+            },
+            {
+                id: 5,
+                title: "Chambre Économique Centre",
+                location: "Yaoundé, Odza",
+                price: "35,000",
+                type: "Chambre Simple",
+                size: "14m²",
+                description: "Chambre simple au prix économique. Idéale pour budget étudiant limité. Quartier animé et accessible.",
+                image: "images/chambre_odza.png",           // ← à remplacer
+                fallbackEmoji: "💰",
+                features: ["WiFi", "Eau Chaude", "Lit Confortable", "Armoire", "Éclairage"],
+                phone: "+237659932082"
+            },
+            {
+                id: 6,
+                title: "Chambre Premium Cité Verte",
+                location: "Yaoundé, Cité Verte",
+                price: "65,000",
+                type: "Chambre Premium",
+                size: "24m²",
+                description: "Chambre haut de gamme dans résidence sécurisée. Accès à salle de sport et espace détente. Excellent standing.",
+                image: "images/chambre_cite_verte.png",     // ← à remplacer
+                fallbackEmoji: "👑",
+                features: ["Salle de Gym", "Terrasse", "WiFi Premium", "Climatisation", "Bureau"],
+                phone: "+237659932082"
+            }
+        ];
+
+        let selectedRoom = null;
+
+        /* ---- Helpers image ---- */
+
+        /**
+         * Crée une balise <img> avec fallback emoji si l'image ne charge pas.
+         * @param {string} src      - chemin ou URL de l'image
+         * @param {string} alt      - texte alternatif
+         * @param {string} emoji    - emoji affiché si l'image est absente
+         * @param {string} cssClass - classe CSS à appliquer au conteneur
+         */
+        function buildImageHTML(src, alt, emoji, cssClass) {
+            return `
+                <div class="${cssClass}">
+                    <img
+                        src="${src}"
+                        alt="${alt}"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                    />
+                    <div class="img-fallback" style="display:none;">${emoji}</div>
+                </div>`;
+        }
+
+        /* ---- Génération des cartes ---- */
+        function generateRooms() {
+            const grid = document.getElementById('roomsGrid');
+            grid.innerHTML = rooms.map(room => `
+                <div class="room-card" onclick="openModal(${room.id})">
+                    ${buildImageHTML(room.image, room.title, room.fallbackEmoji, 'room-image')}
+                    <div class="room-content">
+                        <div class="room-location">📍 ${room.location}</div>
+                        <h3 class="room-title">${room.title}</h3>
+                        <p class="room-description">${room.description.substring(0, 80)}...</p>
+
+                        <div class="room-features">
+                            <div class="feature">
+                                <span class="feature-label">Type</span>
+                                ${room.type}
+                            </div>
+                            <div class="feature">
+                                <span class="feature-label">Surface</span>
+                                ${room.size}
+                            </div>
+                        </div>
+
+                        <div class="room-footer">
+                            <div>
+                                <div class="price">${room.price} FCFA</div>
+                                <span class="price-period">par mois</span>
+                            </div>
+                            <button class="contact-room-btn" onclick="event.stopPropagation(); contactRoom(${room.id})">
+                                📱 Demander
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* ---- Modal ---- */
+        function openModal(roomId) {
+            selectedRoom = rooms.find(r => r.id === roomId);
+
+            document.getElementById('modalTitle').textContent    = selectedRoom.title;
+            document.getElementById('modalLocation').textContent = selectedRoom.location;
+            document.getElementById('modalPrice').textContent    = selectedRoom.price + ' FCFA';
+            document.getElementById('modalType').textContent     = selectedRoom.type;
+            document.getElementById('modalSize').textContent     = selectedRoom.size;
+            document.getElementById('modalDescription').textContent = selectedRoom.description;
+
+            // Image dans le modal
+            document.getElementById('modalImage').innerHTML =
+                buildImageHTML(selectedRoom.image, selectedRoom.title, selectedRoom.fallbackEmoji, 'modal-image-inner')
+                    .replace('class="modal-image-inner"', 'style="width:100%;height:100%;"');
+
+            // On injecte directement l'img + fallback dans le conteneur #modalImage
+            document.getElementById('modalImage').innerHTML = `
+                <img
+                    src="${selectedRoom.image}"
+                    alt="${selectedRoom.title}"
+                    style="width:100%;height:100%;object-fit:cover;display:block;border-radius:8px;"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+                <div class="img-fallback" style="display:none;border-radius:8px;">${selectedRoom.fallbackEmoji}</div>
+            `;
+
+            const featuresList = document.getElementById('modalFeatures');
+            featuresList.innerHTML = selectedRoom.features.map(f => `<li>${f}</li>`).join('');
+
+            document.getElementById('roomModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('roomModal').classList.remove('active');
+        }
+
+        /* ---- WhatsApp ---- */
+        function contactViaWhatsApp() {
+            if (selectedRoom) {
+                const message = `Bonjour, je suis intéressé par la chambre : "${selectedRoom.title}" (${selectedRoom.price} FCFA/mois)`;
+                window.open(`https://wa.me/${selectedRoom.phone.replace(/[+\s-]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+            }
+        }
+
+        function contactRoom(roomId) {
+            const room = rooms.find(r => r.id === roomId);
+            const message = `Bonjour, je suis intéressé par : "${room.title}"`;
+            window.open(`https://wa.me/${room.phone.replace(/[+\s-]/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        /* ---- Scroll ---- */
+        function scrollToRooms() {
+            document.getElementById('roomsGrid').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ---- Fermer modal au clic extérieur ---- */
+        document.getElementById('roomModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        /* ---- Init ---- */
+        generateRooms();
+    </script>
+</body>
+</html>
